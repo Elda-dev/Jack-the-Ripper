@@ -2,9 +2,10 @@ from pytube import YouTube
 from pytube import Search
 import os
 
-def DownloadMusic(song_name, destination_path):
+
+def DownloadMusic(songname, destination_path, filename, author, album):
     # grabbing the video ID of the top user search
-    s = Search(song_name)
+    s = Search(songname)
     results = s.results
     videoid = results[0].video_id
     # querying youtube and obtaining the video
@@ -26,11 +27,13 @@ def DownloadMusic(song_name, destination_path):
     out_file = stream.download(output_path=destination_path)
     # encoding the file as a .mp3
     base, ext = os.path.splitext(out_file)
-    new_file = base + '.mp3'
+    filename = filename.replace("/", ".")
+    new_file = "./Output/" + filename + '.mp3'
     os.rename(out_file, new_file)
 
 
-song_name = input("Pick a song to download:    ")
+
+"""song_name = input("Pick a song to download:    ")
 print("Enter the destination (leave blank for current directory)")
 destination = str(input(">> ")) or './Output'
-DownloadMusic(song_name, destination)
+DownloadMusic(song_name, destination)"""
