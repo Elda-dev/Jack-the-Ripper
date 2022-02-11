@@ -5,7 +5,7 @@ from moviepy.editor import *
 import os
 
 
-def DownloadMusic(songname, artist, album, destination_path, filename):
+def DownloadMusic(songname, artist, album, destination_path):
     # grabbing the video ID of the top user search
     s = Search(songname + " by " + artist)
     results = s.results

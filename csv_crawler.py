@@ -10,7 +10,7 @@ def downloadcsv(input_csv):
         for row in csvlist:
             if row[4] != "Album" and row[0] != "Track name":
                 try:
-                    ripper.DownloadMusic(row[0] + " by " + row[1], './Output', row[0], row[1], row[2])
+                    ripper.DownloadMusic(row[0], row[1], row[2], "./Output")
                 except:
                     continue
                 print(row[0] + " Has been downloaded")
