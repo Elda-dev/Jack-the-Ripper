@@ -38,6 +38,7 @@ def DownloadMusic(songname, artist, album, destination_path, filename):
     song.initTag()
     song.tag.artist = artist
     song.tag.album = album
+    song.tag.save()
     print(song.tag.artist)
     print(song.tag.album)
     os.remove(mp4path)
