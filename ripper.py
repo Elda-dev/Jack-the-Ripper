@@ -26,7 +26,7 @@ def DownloadMusic(songname, artist, album, destination_path, filename):
             stream = yt.streams.get_by_itag(element.itag)
     # setting the output path - if none entered, use this
     # grabbing the file
-    out_file = stream.download(output_path=destination_path, filename="newdownload")
+    out_file = stream.download(output_path=destination_path, filename="newdownload.mp4")
     # encoding the file as a .mp3
     mp4path = destination_path + "/newdownload.mp4"
     print(mp4path)
