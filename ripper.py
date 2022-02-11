@@ -3,7 +3,7 @@ from pytube import Search
 import os
 
 
-def DownloadMusic(songname, destination_path, filename, author, album):
+def DownloadMusic(songname, destination_path, filename):
     # grabbing the video ID of the top user search
     s = Search(songname)
     results = s.results
@@ -30,10 +30,3 @@ def DownloadMusic(songname, destination_path, filename, author, album):
     filename = filename.replace("/", ".")
     new_file = "./Output/" + filename + '.mp3'
     os.rename(out_file, new_file)
-
-
-
-"""song_name = input("Pick a song to download:    ")
-print("Enter the destination (leave blank for current directory)")
-destination = str(input(">> ")) or './Output'
-DownloadMusic(song_name, destination)"""
