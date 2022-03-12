@@ -30,10 +30,9 @@ def DownloadMusic(songname, artist, album, destination_path):
     # encoding the file as a .mp3
     mp4path = destination_path + "/newdownload.mp4"
     print(mp4path)
-    if album:
-        mp3path = destination_path + "/" + album + "/" + songname + ".mp3"
-    else:
-        mp3path = destination_path + "/" + songname + ".mp3"
+    if(os.path.isdir("./Output/" + album + "/") == False):
+        os.mkdir("./Output/" + album + "/")
+    mp3path = "./Output/" + album + "/" + songname + ".mp3"
     print(mp3path)
     mp4_to_mp3(mp4path, mp3path)
     # adding tags
