@@ -30,7 +30,10 @@ def DownloadMusic(songname, artist, album, destination_path):
     # encoding the file as a .mp3
     mp4path = destination_path + "/newdownload.mp4"
     print(mp4path)
-    mp3path = destination_path + "/" + songname + ".mp3"
+    if album:
+        mp3path = destination_path + "/" + album + "/" + songname + ".mp3"
+    else:
+        mp3path = destination_path + "/" + songname + ".mp3"
     print(mp3path)
     mp4_to_mp3(mp4path, mp3path)
     # adding tags
@@ -42,7 +45,6 @@ def DownloadMusic(songname, artist, album, destination_path):
     print(song.tag.artist)
     print(song.tag.album)
     os.remove(mp4path)
-
 
 #print(EasyID3.valid_keys.keys())
 
