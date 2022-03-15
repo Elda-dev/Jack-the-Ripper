@@ -30,11 +30,11 @@ if os.path.isdir(destination + "/" + result.artists[0].name + "/" + result.title
 
 
 try:
-    print(result.images[0])
     cover_art = requests.get(result.images[0]['resource_url']).content
     img_path = destination + "/" + result.title + ".jpg"
     with open(img_path, 'wb') as handler:
         handler.write(cover_art)
+    print("Found cover art")
 except IndexError:
     print("no image")
 
@@ -48,15 +48,11 @@ for letter in blacklisted_characters:
 n = 0
 
 for i in range(len(result.tracklist)):
-    print(result.tracklist[n].title)
-    print(result.artists[0].name)
-    print(destination)
-    print(n+1)
     try:
-        ripper.DownloadMusic(result.tracklist[n].title, result.artists[0].name, result.title, destination, n+1,
+        ripper.DownloadMusic(result.tracklist[n].title, name, result.title, destination, n+1,
                              img_path, result.genres[0])
     except NameError:
-        ripper.DownloadMusic(result.tracklist[n].title, result.artists[0].name, result.title, destination, n + 1,
+        ripper.DownloadMusic(result.tracklist[n].title, name, result.title, destination, n + 1,
                              "null", result.genres[0])
     n += 1
 
