@@ -7,11 +7,12 @@ import os
 
 def DownloadMusic(songname, artist, album, destination_path="./Output", songid=-1, coverartpath="null", genre="null"):
     # grabbing the video ID of the top user search
-    s = Search(songname + " by " + artist)
+    s = Search(artist + " " + songname)
     results = s.results
     videoid = results[0].video_id
     # querying youtube and obtaining the video
     yt = YouTube("http://youtube.com/watch?v=" + videoid)
+    print(yt)
     # isolating audio streams of the .mp4 format
     audiostreams = yt.streams.filter(file_extension='mp4', only_audio=True)
     # sorting audio streams based on the audio quality, and finding the highest streaming quality available
@@ -31,9 +32,9 @@ def DownloadMusic(songname, artist, album, destination_path="./Output", songid=-
     print(destination_path)
     mp4path = destination_path + "/newdownload.mp4"
     print(mp4path)
-    if os.path.isdir(destination_path + "/" + album + "/") is False:
-        os.mkdir(destination_path + "/" + album + "/")
-    mp3path = destination_path + "/" + album + "/" + songname + ".mp3"
+    if os.path.isdir(destination_path + "/" + artist + "/" + album + "/") is False:
+        os.makedirs(destination_path + "/" + artist + "/" + album + "/", exist_ok=True)
+    mp3path = destination_path + "/" + artist + "/" + album + "/" + songname + ".mp3"
     print(mp3path)
     mp4_to_mp3(mp4path, mp3path)
     # adding tags
@@ -44,6 +45,7 @@ def DownloadMusic(songname, artist, album, destination_path="./Output", songid=-
     if songid != -1:
         song.tag.track_num = songid
     if coverartpath != "null":
+        song.tag.images.set(0, open(coverartpath, 'rb').read(), 'image/jpeg')
         song.tag.images.set(3, open(coverartpath, 'rb').read(), 'image/jpeg')
     if genre != "null":
         song.tag.genre = genre
