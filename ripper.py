@@ -54,6 +54,8 @@ def DownloadMusic(songname, artist, album, destination_path="./Output", songid=-
     print(song.tag.album)
     os.remove(mp4path)
 
+def YoutubeDownload(link, artist, album, destination_path="./Output"):
+
 
 def mp4_to_mp3(mp4, mp3):
     mp4_without_frames = AudioFileClip(mp4)
