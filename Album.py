@@ -2,7 +2,8 @@ import discogs_client
 import ripper
 import os
 import requests
-import json
+
+print("Hello, World!")
 
 with open("./config.json", "r", encoding="utf8") as jsonfile:
     config = json.load(jsonfile)
