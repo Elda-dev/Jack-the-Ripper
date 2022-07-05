@@ -57,11 +57,13 @@ with open(img_path, 'wb') as handler:
     handler.write(image)
 
 for track in track_list:
-    try:
-        title = track['recording']['title']
-        title.replace(".", "")
-        title.replace("/", "")
+    title = track['recording']['title']
+    title.replace(".", "")
+    title.replace("/", "")
+    title.replace(":", "")
+    title.replace(";", "")
 
+    try:
         ripper.download_music(title, result['release']['artist-credit'][0]['artist']['name'],
                               result['release']['title'], destination, int(track['position']),
                               img_path)
