@@ -32,11 +32,6 @@ def download_music(songname, artist, album, destination_path="./Output", songid=
     if os.path.isdir(destination_path + "/" + artist + "/" + album + "/") is False:
         os.makedirs(destination_path + "/" + artist + "/" + album + "/", exist_ok=True)
 
-    songname.replace(".", "")
-    songname.replace("/", "")
-    songname.replace(":", "")
-    songname.replace(";", "")
-
     print(songname)
 
     mp3path = destination_path + "/" + artist + "/" + album + "/" + songname + ".mp3"
