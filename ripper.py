@@ -37,6 +37,8 @@ def download_music(songname, artist, album, destination_path="./Output", songid=
     songname.replace(":", "")
     songname.replace(";", "")
 
+    print(songname)
+
     mp3path = destination_path + "/" + artist + "/" + album + "/" + songname + ".mp3"
     mp4_to_mp3(mp4path, mp3path)
     # adding tags
