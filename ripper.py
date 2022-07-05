@@ -31,9 +31,6 @@ def download_music(songname, artist, album, destination_path="./Output", songid=
     mp4path = destination_path + "/newdownload.mp4"
     if os.path.isdir(destination_path + "/" + artist + "/" + album + "/") is False:
         os.makedirs(destination_path + "/" + artist + "/" + album + "/", exist_ok=True)
-
-    print(songname)
-
     mp3path = destination_path + "/" + artist + "/" + album + "/" + songname + ".mp3"
     mp4_to_mp3(mp4path, mp3path)
     # adding tags

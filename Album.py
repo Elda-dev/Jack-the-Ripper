@@ -57,6 +57,7 @@ with open(img_path, 'wb') as handler:
     handler.write(image)
 
 for track in track_list:
+
     title = track['recording']['title']
     title = title.replace(".", "")
     title = title.replace("/", "")
