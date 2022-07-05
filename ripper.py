@@ -5,37 +5,33 @@ from moviepy.editor import *
 import os
 
 
-def DownloadMusic(songname, artist, album, destination_path="./Output", songid=-1, coverartpath="null", genre="null"):
+def download_music(songname, artist, album, destination_path="./Output", songid=-1, coverartpath="null", genre="null"):
     # grabbing the video ID of the top user search
     s = Search(artist + " " + songname)
     results = s.results
     videoid = results[0].video_id
     # querying youtube and obtaining the video
     yt = YouTube("http://youtube.com/watch?v=" + videoid)
-    print(yt)
     # isolating audio streams of the .mp4 format
-    audiostreams = yt.streams.filter(file_extension='mp4', only_audio=True)
+    audio_streams = yt.streams.filter(file_extension='mp4', only_audio=True)
     # sorting audio streams based on the audio quality, and finding the highest streaming quality available
-    highestquality = 0
-    for element in audiostreams:
+    highest_quality = 0
+    for element in audio_streams:
         quality = int(element.abr.replace('kbps', ''))
-        if quality > highestquality:
-            highestquality = quality
+        if quality > highest_quality:
+            highest_quality = quality
     # obtaining the file of the highest quality
-    for element in audiostreams:
-        if element.abr == (str(highestquality) + 'kbps'):
+    for element in audio_streams:
+        if element.abr == (str(highest_quality) + 'kbps'):
             stream = yt.streams.get_by_itag(element.itag)
     # setting the output path - if none entered, use this
     # grabbing the file
     out_file = stream.download(output_path=destination_path, filename="newdownload.mp4")
     # encoding the file as a .mp3
-    print(destination_path)
     mp4path = destination_path + "/newdownload.mp4"
-    print(mp4path)
     if os.path.isdir(destination_path + "/" + artist + "/" + album + "/") is False:
         os.makedirs(destination_path + "/" + artist + "/" + album + "/", exist_ok=True)
     mp3path = destination_path + "/" + artist + "/" + album + "/" + songname + ".mp3"
-    print(mp3path)
     mp4_to_mp3(mp4path, mp3path)
     # adding tags
     song = eyed3.load(mp3path)
@@ -50,11 +46,10 @@ def DownloadMusic(songname, artist, album, destination_path="./Output", songid=-
     if genre != "null":
         song.tag.genre = genre
     song.tag.save(version=eyed3.id3.ID3_V2_3)
-    print(song.tag.artist)
-    print(song.tag.album)
     os.remove(mp4path)
 
-def YoutubeDownload(link, artist, album, destination_path="./Output"):
+
+"""def YoutubeDownload(link, artist, album, destination_path="./Output"):
     yt = link
     audiostreams = yt.streams.filter(file_extension='mp4', only_audio=True)
     # sorting audio streams based on the audio quality, and finding the highest streaming quality available
@@ -96,7 +91,8 @@ def YoutubeDownload(link, artist, album, destination_path="./Output"):
     song.tag.save(version=eyed3.id3.ID3_V2_3)
     print(song.tag.artist)
     print(song.tag.album)
-    os.remove(mp4path)
+    os.remove(mp4path)"""
+
 
 def mp4_to_mp3(mp4, mp3):
     mp4_without_frames = AudioFileClip(mp4)

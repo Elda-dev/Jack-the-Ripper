@@ -1,5 +1,4 @@
 import ripper
-import discogs_client
 import os
 import requests
 import json
@@ -9,7 +8,6 @@ with open("./config.json", "r", encoding="utf8") as jsonfile:
 dest = config['default_directory']
 
 blacklisted_characters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "/", " "]
-d = discogs_client.Client("album-song-finder", user_token="fzhtitURLAAQOKaUWAbBFhaeAsnlqGowVxwCEbaQ")
 
 print("What is the name of the song you'd like to download?")
 song_name = input(">>> ")
@@ -36,7 +34,6 @@ try:
     print("Found song")
 except IndexError:
     print("No album found that corresponds with this song!")
-    ripper.DownloadMusic(row[0], row[1], row[2])
     dl = False
 
 if dl:
@@ -64,10 +61,10 @@ if dl:
             print("Downloading " + result.tracklist[n].title + " by " + name + " to " + destination)
 
             try:
-                ripper.DownloadMusic(result.tracklist[n].title, name, result.title, destination, n+1,
-                                     img_path, result.genres[0])
+                ripper.download_music(result.tracklist[n].title, name, result.title, destination, n + 1,
+                                      img_path, result.genres[0])
             except NameError:
-                ripper.DownloadMusic(result.tracklist[n].title, name, result.title, destination, n + 1,
+                ripper.download_music(result.tracklist[n].title, name, result.title, destination, n + 1,
                                      "null", result.genres[0])
         n += 1
 

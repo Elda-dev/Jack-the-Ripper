@@ -1,15 +1,13 @@
 import ripper
 import os
-import musicbrainzng
-import request
 import json
+
 
 with open("./config.json", "r", encoding="utf8") as jsonfile:
     config = json.load(jsonfile)
 dest = config['default_directory']
 
 blacklisted_characters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "/", " "]
-d = discogs_client.Client("album-song-finder", user_token="fzhtitURLAAQOKaUWAbBFhaeAsnlqGowVxwCEbaQ")
 
 print("What is the name of the song you'd like to download?")
 song_name = input(">>> ")

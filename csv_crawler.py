@@ -2,11 +2,9 @@ import csv
 import ripper
 import os
 import requests
-import discogs_client
 import json
 
 blacklisted_characters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "/", " "]
-d = discogs_client.Client("album-song-finder", user_token="fzhtitURLAAQOKaUWAbBFhaeAsnlqGowVxwCEbaQ")
 
 
 def downloadcsv(input_csv, local_destination):
@@ -28,7 +26,7 @@ def downloadcsv(input_csv, local_destination):
                         print("Found song")
                     except IndexError:
                         print("No album found that corresponds with this song!")
-                        ripper.DownloadMusic(row[0], row[1], row[2])
+                        ripper.download_music(row[0], row[1], row[2])
                         dl = False
 
                     if dl:
@@ -49,10 +47,10 @@ def downloadcsv(input_csv, local_destination):
                         print("Downloading " + result.tracklist[n].title + " by " + row[1] + " to " + local_destination)
 
                         try:
-                            ripper.DownloadMusic(row[0], row[1], row[2], local_destination, n + 1,
-                                                 img_path, result.genres[0])
+                            ripper.download_music(row[0], row[1], row[2], local_destination, n + 1,
+                                                  img_path, result.genres[0])
                         except NameError:
-                            ripper.DownloadMusic(row[0], row[1], row[2], local_destination, n + 1,
+                            ripper.download_music(row[0], row[1], row[2], local_destination, n + 1,
                                                  "null", result.genres[0])
                         n += 1
 
