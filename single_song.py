@@ -1,19 +1,55 @@
+import musicbrainzngs
 import ripper
 import os
-import requests
 import json
+
+musicbrainzngs.set_useragent("testing metadata finder", "0.1")
 
 with open("./config.json", "r", encoding="utf8") as jsonfile:
     config = json.load(jsonfile)
 dest = config['default_directory']
 
-blacklisted_characters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "/", " "]
-
 print("What is the name of the song you'd like to download?")
-song_name = input(">>> ")
-print("Who is it by? (artist name)")
-artist = input(">>> ")
-print("Pick a destination (leave blank for default)")
+album = input(">>> ")
+
+result = musicbrainzngs.search_recordings(query=album, limit=50, offset=None, strict=False)
+
+id_list = []
+
+for release in result['recording-list']:
+    try:
+        detail = release['disambiguation']
+        if detail == " ":
+            detail = ""
+    except KeyError:
+        detail = ""
+    print(u"[{id}] - {name} {detail} by {artist}".format(id=len(id_list), name=release["title"], detail=detail,
+                                                         artist=release['artist-credit'][0]['name']))
+    id_list.append(release['id'])
+
+print("Please, pick which of the above songs to download.")
+choice = int(input(">>> "))
+
+recording = musicbrainzngs.get_recording_by_id(id_list[choice], includes=['releases', 'artists'])
+
+album = musicbrainzngs.get_release_by_id(recording['recording']['release-list'][0]['id'],
+                                         includes=['recordings', 'artists'])
+
+print("Would you like to download the whole album? (Y/N)")
+download_album = input(">>> ")
+
+answers = ["Y", "y", "N", "n"]
+
+while download_album not in answers:
+    print("That is an invalid input, would you like to download the whole album? (Y/N)")
+    download_album = input(">>> ")
+
+if download_album.lower() == "y":
+    download_album = True
+else:
+    download_album = False
+
+print("Pick a destination (leave blank for default, located in config.json)")
 destination = input(">>> ")
 
 if destination == "":
@@ -23,52 +59,92 @@ while os.path.isdir(destination) is False:
     print("That is not a valid destination, please, input a destination:")
     destination = input(">>>")
     if destination == "":
-        destination = "./Output"
+        destination = dest
 
-results = d.search(song_name, artist=artist, track=song_name, type='release')
+if download_album:  # Download the whole album, very similar to Album.py
 
-dl = True
+    track_list = album['release']['medium-list'][0]['track-list']
 
-try:
-    result = results[0]
-    print("Found song")
-except IndexError:
-    print("No album found that corresponds with this song!")
-    dl = False
+    print("Downloading " + album['release']['title'] + " by " + album['release']['artist-credit'][0]['artist'][
+        'name'])
 
-if dl:
+    if os.path.isdir(
+            destination + "/" + album['release']['artist-credit'][0]['artist']['name'] + "/" + album['release'][
+                'title'] + "/") is False:
+        os.makedirs(
+            destination + "/" + album['release']['artist-credit'][0]['artist']['name'] + "/" + album['release'][
+                'title'] + "/", exist_ok=True)
+
     try:
-        cover_art = requests.get(result.images[0]['resource_url']).content
-        img_path = destination + "/" + result.title + ".jpg"
+        image = musicbrainzngs.get_image_front(album['release']['id'])
+        img_path = destination + "/" + album['release']['artist-credit'][0]['artist']['name'] + ".jpg"
         with open(img_path, 'wb') as handler:
-            handler.write(cover_art)
-        print("Found cover art")
-    except IndexError:
-        print("no image")
+            handler.write(image)
+    except:
+        img_path = "null"
 
-    name = str(result.artists[0].name)
+    for track in track_list:
 
-    for letter in blacklisted_characters:
-        name = name.replace(letter, "")
+        title = track['recording']['title']
+        title = title.replace(".", "")
+        title = title.replace("/", "")
+        title = title.replace(":", "")
+        title = title.replace(";", "")
+
+        try:
+            ripper.download_music(title, album['release']['artist-credit'][0]['artist']['name'],
+                                  album['release']['title'], destination, int(track['position']),
+                                  img_path)
+        except NameError:
+            ripper.download_music(title, album['release']['artist-credit'][0]['artist']['name'],
+                                  album['release']['title'], destination, int(track['position']))
+
+    print(album['release']['title'] + " has been downloaded!")
 
 
+else:  # Don't download album, only the song
 
-    n = 0
+    print("Downloading " + recording['recording']['title'] + " by " +
+          recording['recording']['artist-credit'][0]['artist'][
+              'name'])
 
-    for i in range(len(result.tracklist)):
-        if song_name.strip().lower() in result.tracklist[n].title.strip().lower():
+    if os.path.isdir(
+            destination + "/" + recording['recording']['artist-credit'][0]['artist']['name'] + "/" +
+            album['release']['title'] + "/") is False:
+        os.makedirs(
+            destination + "/" + recording['recording']['artist-credit'][0]['artist']['name'] + "/" +
+            album['release']['title'] + "/", exist_ok=True)
 
-            print("Downloading " + result.tracklist[n].title + " by " + name + " to " + destination)
+    try:
+        image = musicbrainzngs.get_image_front(album['release']['id'])
+        img_path = destination + "/" + recording['recording']['artist-credit'][0]['artist']['name'] + ".jpg"
+        with open(img_path, 'wb') as handler:
+            handler.write(image)
+    except:
+        img_path = "null"
 
-            try:
-                ripper.download_music(result.tracklist[n].title, name, result.title, destination, n + 1,
-                                      img_path, result.genres[0])
-            except NameError:
-                ripper.download_music(result.tracklist[n].title, name, result.title, destination, n + 1,
-                                     "null", result.genres[0])
-        n += 1
+    track_position = 0
 
-    if img_path:
-        os.remove(img_path)
+    for element in album['release']['medium-list'][0]['track-list']:
+        if element['recording']['id'] == recording['recording']['id']:
+            track_position = element['position']
+            break
 
-print(song_name + " has been downloaded!")
+    title = recording['recording']['title']
+    title = title.replace(".", "")
+    title = title.replace("/", "")
+    title = title.replace(":", "")
+    title = title.replace(";", "")
+
+    try:
+        ripper.download_music(title, recording['recording']['artist-credit'][0]['artist']['name'],
+                              album['release']['title'], destination, track_position,
+                              img_path)
+    except NameError:
+        ripper.download_music(title, recording['recording']['artist-credit'][0]['artist']['name'],
+                              album['release']['title'], destination, track_position)
+
+    print(title + " has been downloaded!")
+
+if img_path != "null":
+    os.remove(img_path)

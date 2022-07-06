@@ -12,10 +12,10 @@ dest = config['default_directory']
 print("What is the name of the album you'd like to download?")
 album = input(">>> ")
 
-result = musicbrainzngs.search_releases(album)
+result = musicbrainzngs.search_release_groups(query=album, limit=50, offset=None, strict=False)
 id_list = []
 
-for release in result['release-list']:
+for release in result['release-group-list']:
     try:
         detail = release['disambiguation']
         if detail == " ":
@@ -51,10 +51,14 @@ if os.path.isdir(destination + "/" + result['release']['artist-credit'][0]['arti
     os.makedirs(destination + "/" + result['release']['artist-credit'][0]['artist']['name'] + "/" + result['release'][
         'title'] + "/", exist_ok=True)
 
-image = musicbrainzngs.get_image_front(id_list[choice])
-img_path = destination + "/" + result['release']['artist-credit'][0]['artist']['name'] + ".jpg"
-with open(img_path, 'wb') as handler:
-    handler.write(image)
+try:
+    image = musicbrainzngs.get_image_front(id_list[choice])
+    img_path = destination + "/" + result['release']['artist-credit'][0]['artist']['name'] + ".jpg"
+    with open(img_path, 'wb') as handler:
+        handler.write(image)
+except:
+    img_path = "NULL"
+
 
 for track in track_list:
 
