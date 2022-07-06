@@ -70,10 +70,10 @@ if download_album:  # Download the whole album, very similar to Album.py
 
     if os.path.isdir(
             destination + "/" + album['release']['artist-credit'][0]['artist']['name'] + "/" + album['release'][
-                'title'] + "/") is False:
+                'title']) is False:
         os.makedirs(
             destination + "/" + album['release']['artist-credit'][0]['artist']['name'] + "/" + album['release'][
-                'title'] + "/", exist_ok=True)
+                'title'], exist_ok=True)
 
     try:
         image = musicbrainzngs.get_image_front(album['release']['id'])
@@ -110,10 +110,10 @@ else:  # Don't download album, only the song
 
     if os.path.isdir(
             destination + "/" + recording['recording']['artist-credit'][0]['artist']['name'] + "/" +
-            album['release']['title'] + "/") is False:
+            album['release']['title']) is False:
         os.makedirs(
             destination + "/" + recording['recording']['artist-credit'][0]['artist']['name'] + "/" +
-            album['release']['title'] + "/", exist_ok=True)
+            album['release']['title'], exist_ok=True)
 
     try:
         image = musicbrainzngs.get_image_front(album['release']['id'])

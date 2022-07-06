@@ -1,3 +1,5 @@
+import urllib.error
+
 import musicbrainzngs
 import ripper
 import os
@@ -29,8 +31,12 @@ for release in result['release-group-list']:
 print("Please, pick which of the above albums to download.")
 choice = int(input(">>> "))
 
-result = musicbrainzngs.get_release_by_id(id_list[choice], includes=['recordings', 'artists'])
-track_list = result['release']['medium-list'][0]['track-list']
+try:
+    result = musicbrainzngs.get_release_by_id(id_list[choice], includes=['recordings', 'artists'])
+    track_list = result['release']['medium-list'][0]['track-list']
+except urllib.error.HTTPError:
+    print("Unable to find this album")
+    exit()
 
 print("Pick a destination (leave blank for default, located in config.json)")
 destination = input(">>> ")
@@ -47,9 +53,9 @@ while os.path.isdir(destination) is False:
 print("Downloading " + result['release']['title'] + " by " + result['release']['artist-credit'][0]['artist']['name'])
 
 if os.path.isdir(destination + "/" + result['release']['artist-credit'][0]['artist']['name'] + "/" + result['release'][
-    'title'] + "/") is False:
+    'title']) is False:
     os.makedirs(destination + "/" + result['release']['artist-credit'][0]['artist']['name'] + "/" + result['release'][
-        'title'] + "/", exist_ok=True)
+        'title'], exist_ok=True)
 
 try:
     image = musicbrainzngs.get_image_front(id_list[choice])
