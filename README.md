@@ -18,3 +18,5 @@ To run it, you will need the following dependancies:
 At the moment **Playlist Name** is not in use, but the other categories are required for `csv_crawler.py` to work properly. This is the same format as exported by [Tune my Music](https://www.tunemymusic.com/Spotify-to-File.php), so if you'd like to move from Spotify to Jellyfin, this tool may be able to help.
 
 If you'd like to change the default path that `single_song.py`, ` Album.py`, and `csv_crawler.py` save to, you can do so in `config.json`
+
+For educational use only.
