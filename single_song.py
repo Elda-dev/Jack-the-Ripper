@@ -3,7 +3,7 @@ import ripper
 import os
 import json
 
-musicbrainzngs.set_useragent("testing metadata finder", "0.1")
+musicbrainzngs.set_useragent("MP3 Metadata Collector", "0.2")
 
 with open("./config.json", "r", encoding="utf8") as jsonfile:
     config = json.load(jsonfile)
@@ -34,6 +34,8 @@ recording = musicbrainzngs.get_recording_by_id(id_list[choice], includes=['relea
 
 album = musicbrainzngs.get_release_by_id(recording['recording']['release-list'][0]['id'],
                                          includes=['recordings', 'artists'])
+
+print(album['release']['id'])
 
 print("Would you like to download the whole album? (Y/N)")
 download_album = input(">>> ")

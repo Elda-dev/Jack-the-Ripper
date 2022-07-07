@@ -5,7 +5,7 @@ import ripper
 import os
 import json
 
-musicbrainzngs.set_useragent("testing metadata finder", "0.1")
+musicbrainzngs.set_useragent("MP3 Metadata Collector", "0.2")
 
 with open("./config.json", "r", encoding="utf8") as jsonfile:
     config = json.load(jsonfile)
@@ -14,7 +14,7 @@ dest = config['default_directory']
 print("What is the name of the album you'd like to download?")
 album = input(">>> ")
 
-result = musicbrainzngs.search_release_groups(query=album, limit=50, offset=None, strict=False)
+result = musicbrainzngs.search_release_groups(album)
 id_list = []
 
 for release in result['release-group-list']:
@@ -26,17 +26,13 @@ for release in result['release-group-list']:
         detail = ""
     print(u"[{id}] - {name} {detail} by {artist}".format(id=len(id_list), name=release["title"], detail=detail,
                                                          artist=release['artist-credit'][0]['name']))
-    id_list.append(release['id'])
+    id_list.append(release['release-list'][0]['id'])
 
 print("Please, pick which of the above albums to download.")
 choice = int(input(">>> "))
 
-try:
-    result = musicbrainzngs.get_release_by_id(id_list[choice], includes=['recordings', 'artists'])
-    track_list = result['release']['medium-list'][0]['track-list']
-except urllib.error.HTTPError:
-    print("Unable to find this album")
-    exit()
+result = musicbrainzngs.get_release_by_id(id_list[choice], includes=['recordings', 'artists'])
+track_list = result['release']['medium-list'][0]['track-list']
 
 print("Pick a destination (leave blank for default, located in config.json)")
 destination = input(">>> ")
