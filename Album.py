@@ -78,7 +78,7 @@ for track in track_list:
         ripper.download_music(title, result['release']['artist-credit'][0]['artist']['name'],
                               result['release']['title'], destination, int(track['position']))
 
-if img_path:
+if img_path != "null":
     os.remove(img_path)
 
 print(result['release']['title'] + " has been downloaded!")
