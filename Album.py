@@ -59,7 +59,7 @@ try:
     with open(img_path, 'wb') as handler:
         handler.write(image)
 except:
-    img_path = "NULL"
+    img_path = "null"
 
 
 for track in track_list:
