@@ -11,27 +11,48 @@ with open("./config.json", "r", encoding="utf8") as jsonfile:
     config = json.load(jsonfile)
 dest = config['default_directory']
 
-print("What is the name of the album you'd like to download?")
-album = input(">>> ")
+print("Would you like to provide a MusicBrainz ID instead of a name? (Y/N)")
+use_id = input(">>> ")
 
-result = musicbrainzngs.search_release_groups(album)
-id_list = []
+answers = ["Y", "y", "N", "n"]
 
-for release in result['release-group-list']:
-    try:
-        detail = release['disambiguation']
-        if detail == " ":
+while use_id not in answers:
+    print("That is an invalid input, would you like to provide a MusicBrainz ID instead of a name? (Y/N)")
+    use_id = input(">>> ")
+
+if use_id.lower() == "y":
+    use_id = True
+else:
+    use_id = False
+
+if not use_id:
+    print("What is the name of the album you'd like to download?")
+    album = input(">>> ")
+
+    result = musicbrainzngs.search_release_groups(album)
+    id_list = []
+
+    for release in result['release-group-list']:
+        try:
+            detail = release['disambiguation']
+            if detail == " ":
+                detail = ""
+        except KeyError:
             detail = ""
-    except KeyError:
-        detail = ""
-    print(u"[{id}] - {name} {detail} by {artist}".format(id=len(id_list), name=release["title"], detail=detail,
-                                                         artist=release['artist-credit'][0]['name']))
-    id_list.append(release['release-list'][0]['id'])
+        print(u"[{id}] - {name} {detail} by {artist}".format(id=len(id_list), name=release["title"], detail=detail,
+                                                             artist=release['artist-credit'][0]['name']))
+        id_list.append(release['release-list'][0]['id'])
 
-print("Please, pick which of the above albums to download.")
-choice = int(input(">>> "))
+    print("Please, pick which of the above albums to download.")
+    choice = int(input(">>> "))
 
-result = musicbrainzngs.get_release_by_id(id_list[choice], includes=['recordings', 'artists'])
+    selected_id = id_list[choice]
+else:
+    print("Please input the MusicBrainz ID:")
+    selected_id = input(">>> ")
+
+
+result = musicbrainzngs.get_release_by_id(selected_id, includes=['recordings', 'artists'])
 track_list = result['release']['medium-list'][0]['track-list']
 
 print("Pick a destination (leave blank for default, located in config.json)")

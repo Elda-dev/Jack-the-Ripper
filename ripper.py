@@ -7,7 +7,10 @@ import os
 
 def download_music(songname, artist, album, destination_path="./Output", songid=-1, coverartpath="null", genre="null"):
     # grabbing the video ID of the top user search
-    s = Search(artist + " " + songname)
+    if album == songname:
+        s = Search(artist + " " + songname + " song")
+    else:
+        s = Search(artist + " " + songname)
     results = s.results
     videoid = results[0].video_id
     # querying youtube and obtaining the video
