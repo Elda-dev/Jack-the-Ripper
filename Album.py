@@ -75,7 +75,7 @@ if os.path.isdir(destination + "/" + result['release']['artist-credit'][0]['arti
         'title'], exist_ok=True)
 
 try:
-    image = musicbrainzngs.get_image_front(id_list[choice])
+    image = musicbrainzngs.get_image_front(selected_id)
     img_path = destination + "/" + result['release']['artist-credit'][0]['artist']['name'] + ".jpg"
     with open(img_path, 'wb') as handler:
         handler.write(image)
