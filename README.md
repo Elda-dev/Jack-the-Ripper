@@ -1,6 +1,6 @@
 # Jack the Ripper
 
-Who knew sailing the seven seas would come with this level of privacy and comfort? Jack the Music Man is a simple database-driven audio downloader designed to work with a Jellyfin media server.
+Who knew sailing the seven seas would come with this level of privacy and comfort? Jack the Ripper is a simple database-driven audio downloader designed to work with a Jellyfin media server.
 
 To run it, you will need the following dependancies:
 
