@@ -6,7 +6,7 @@ To run it, you will need the following dependancies:
 
 - `musicbrainzngs`
 - `pytube`
-- `eye3d`
+- `eyed3`
 - `moviepy`
 
 `single_song.py` and `Album.py` work standalone, simply enter credentials and if they exist within the database, it will do it's best to download them to the specified output folder.  Do not run `ripper.py` as this simply houses functions which the other files use.
